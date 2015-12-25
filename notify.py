@@ -32,6 +32,9 @@ def add_todoist_item():
                             payload=urllib.urlencode(payload),
                             method=urlfetch.POST,
                             headers=headers)
+    if result.result_code != 200:
+        raise Exception(u'status code is ' + str(result.result_code) )
+
     logging.debug(result.content)
 
 
@@ -45,7 +48,11 @@ class NotifyHandler(webapp2.RequestHandler):
     def get(self):
         today = datetime.datetime.now() + datetime.timedelta(hours=9)
         if is_training_day(today):
-            add_todoist_item()
+            try:
+                add_todoist_item()
+            except Exception, e:
+                logging.error(e.message)
+
         self.response.write('added task')
 
 app = webapp2.WSGIApplication([
