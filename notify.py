@@ -17,7 +17,7 @@ DUE_DATE = u'21:00'
 
 
 def request(method, payload):
-    headers={'Content-Type': 'application/x-www-form-urlencoded'}
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
     result = urlfetch.fetch(url=ENDPOINT,
                             payload=urllib.urlencode(payload),
@@ -25,7 +25,7 @@ def request(method, payload):
                             headers=headers)
     if result.status_code != 200:
         logging.error(result.content)
-        raise Exception(u'request failed. status code is ' + str(result.status_code) )
+        raise Exception(u'request failed. status code is ' + str(result.status_code))
 
     return result
 
