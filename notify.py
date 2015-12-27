@@ -16,6 +16,20 @@ MESSAGE = u'Bully\'s day'
 DUE_DATE = u'21:00'
 
 
+def request(method, payload):
+    headers={'Content-Type': 'application/x-www-form-urlencoded'}
+
+    result = urlfetch.fetch(url=ENDPOINT,
+                            payload=urllib.urlencode(payload),
+                            method=method,
+                            headers=headers)
+    if result.status_code != 200:
+        logging.error(result.content)
+        raise Exception(u'request failed. status code is ' + str(result.status_code) )
+
+    return result
+
+
 def add_todoist_item():
     temp_id = str(uuid.uuid1())
     commands = [{'type': 'item_add',
@@ -27,18 +41,7 @@ def add_todoist_item():
     payload = {'token': env.token,
                'commands': json.dumps(commands)}
 
-    headers={'Content-Type': 'application/x-www-form-urlencoded'}
-
-    result = urlfetch.fetch(url=ENDPOINT,
-                            payload=urllib.urlencode(payload),
-                            method=urlfetch.POST,
-                            headers=headers)
-    if result.status_code != 200:
-        logging.error(result.content)
-        raise Exception(u'item_add status code is ' + str(result.status_code) )
-
-    logging.debug(result.content)
-
+    result = request(urlfetch.POST, payload)
     return json.loads(result.content)['TempIdMapping'][temp_id]
 
 
@@ -53,15 +56,7 @@ def add_remainder(item_id):
     payload = {'token': env.token,
                'commands': json.dumps(commands)}
 
-    headers={'Content-Type': 'application/x-www-form-urlencoded'}
-
-    result = urlfetch.fetch(url=ENDPOINT,
-                            payload=urllib.urlencode(payload),
-                            method=urlfetch.POST,
-                            headers=headers)
-    if result.status_code != 200:
-        logging.error(result.content)
-        raise Exception(u'reminder_add status code is ' + str(result.status_code) )
+    request(urlfetch.POST, payload)
 
 
 def is_training_day(date=datetime.datetime.now()):
