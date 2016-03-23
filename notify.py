@@ -13,7 +13,7 @@ from google.appengine.api import urlfetch
 ENDPOINT = 'https://todoist.com/API/v6/sync'
 
 MESSAGE = u'Bully\'s day'
-DUE_DATE = u'21:00'
+DUE_DATE = u'21:30'
 
 
 def request(method, payload):
